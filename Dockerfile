@@ -10,6 +10,7 @@ RUN apk add --no-cache python3 \
     && find /usr/lib/ -name '*.pyc' -delete
 
 VOLUME /conf.d/
+EXPOSE 9001
 
 COPY supervisord.conf etc/
 
