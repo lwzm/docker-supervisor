@@ -2,14 +2,16 @@ FROM alpine
 
 LABEL maintainer="lwzm@qq.com"
 
-RUN apk add --no-cache python3 \
-    && mkdir -p etc log run \
-    && pip3 install --no-cache-dir supervisor \
-    && find /usr/lib/ -name '*.pyc' -delete
+RUN apk add --no-cache supervisor \
+    && mkdir -p log \
+    && cd /usr/lib/python3* \
+    && python3 -OO -m compileall -q -b -f . \
+    && find . -name __pycache__ | xargs rm -rf \
+    && find . -name '*.py' -delete
 
 VOLUME /supervisor/
 EXPOSE 9001
 
-COPY supervisord.conf /etc/
-
 CMD [ "supervisord" ]
+
+COPY supervisord.conf /etc/
